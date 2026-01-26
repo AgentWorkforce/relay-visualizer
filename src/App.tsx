@@ -7,6 +7,7 @@ import {
   MultiAgentDemoPage,
   CodeExamplesPage,
   DashboardPage,
+  DiagramTestPage,
 } from './pages'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="multi-agent" element={<MultiAgentDemoPage />} />
           <Route path="code-examples" element={<CodeExamplesPage />} />
           <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="diagram-test" element={<DiagramTestPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
