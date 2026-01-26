@@ -4,62 +4,66 @@ import { codeExamples } from '../data/codeExamples'
 
 export function CodeExamplesPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Header */}
-      <motion.div
+      <motion.header
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="text-3xl font-bold text-slate-50 mb-4">Code Examples</h1>
-        <p className="text-slate-400 text-lg max-w-3xl">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-50 mb-4">Code Examples</h1>
+        <p className="text-slate-400 text-sm md:text-lg max-w-3xl">
           Learn how to use the Agent Relay SDK with these syntax-highlighted code examples.
           Each example demonstrates a key feature of the SDK, from basic setup to advanced
           channel-based communication.
         </p>
-      </motion.div>
+      </motion.header>
 
       {/* Quick Links */}
-      <motion.div
+      <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="flex flex-wrap gap-3"
+        className="flex flex-wrap gap-2 md:gap-3"
+        aria-label="Code example topics"
       >
         {codeExamples.map((example) => (
           <span
             key={example.id}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-full border border-slate-700 text-sm"
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-full border border-slate-700 text-xs md:text-sm"
           >
-            <span className="w-2 h-2 rounded-full bg-blue-500" />
+            <span className="w-2 h-2 rounded-full bg-blue-500" aria-hidden="true" />
             <span className="text-slate-300">{example.title}</span>
           </span>
         ))}
-      </motion.div>
+      </motion.nav>
 
       {/* Code Examples */}
-      <motion.div
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="bg-slate-800/50 rounded-xl border border-slate-700 p-6"
+        className="bg-slate-800/50 rounded-xl border border-slate-700 p-4 md:p-6"
+        aria-labelledby="examples-heading"
       >
+        <h2 id="examples-heading" className="sr-only">Code Examples</h2>
         <CodeTabs examples={codeExamples} />
-      </motion.div>
+      </motion.section>
 
       {/* Installation Note */}
-      <motion.div
+      <motion.aside
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3 }}
         className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4"
+        aria-labelledby="getting-started-heading"
       >
         <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center" aria-hidden="true">
             <InfoIcon className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <h3 className="text-blue-300 font-medium mb-1">Getting Started</h3>
+            <h2 id="getting-started-heading" className="text-blue-300 font-medium mb-1">Getting Started</h2>
             <p className="text-slate-400 text-sm">
               Install the Agent Relay SDK using npm:
               <code className="ml-2 px-2 py-0.5 bg-slate-900 rounded text-blue-300 font-mono text-xs">
@@ -68,31 +72,40 @@ export function CodeExamplesPage() {
             </p>
           </div>
         </div>
-      </motion.div>
+      </motion.aside>
 
       {/* Features Grid */}
-      <motion.div
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.4 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        aria-labelledby="features-heading"
       >
-        <FeatureCard
-          icon={<BoltIcon className="w-5 h-5" />}
-          title="Real-time Communication"
-          description="WebSocket-based messaging with low latency and guaranteed delivery"
-        />
-        <FeatureCard
-          icon={<UsersIcon className="w-5 h-5" />}
-          title="Multi-Agent Support"
-          description="Connect unlimited agents with direct, broadcast, and channel messaging"
-        />
-        <FeatureCard
-          icon={<ShieldIcon className="w-5 h-5" />}
-          title="Type-Safe SDK"
-          description="Full TypeScript support with comprehensive type definitions"
-        />
-      </motion.div>
+        <h2 id="features-heading" className="sr-only">SDK Features</h2>
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 list-none p-0 m-0">
+          <li>
+            <FeatureCard
+              icon={<BoltIcon className="w-5 h-5" />}
+              title="Real-time Communication"
+              description="WebSocket-based messaging with low latency and guaranteed delivery"
+            />
+          </li>
+          <li>
+            <FeatureCard
+              icon={<UsersIcon className="w-5 h-5" />}
+              title="Multi-Agent Support"
+              description="Connect unlimited agents with direct, broadcast, and channel messaging"
+            />
+          </li>
+          <li>
+            <FeatureCard
+              icon={<ShieldIcon className="w-5 h-5" />}
+              title="Type-Safe SDK"
+              description="Full TypeScript support with comprehensive type definitions"
+            />
+          </li>
+        </ul>
+      </motion.section>
     </div>
   )
 }
@@ -107,15 +120,15 @@ function FeatureCard({
   description: string
 }) {
   return (
-    <div className="bg-slate-800 rounded-lg border border-slate-700 p-4 hover:border-slate-600 transition-colors">
+    <article className="bg-slate-800 rounded-lg border border-slate-700 p-4 hover:border-slate-600 transition-colors">
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400" aria-hidden="true">
           {icon}
         </div>
         <h3 className="text-slate-50 font-medium">{title}</h3>
       </div>
       <p className="text-slate-400 text-sm">{description}</p>
-    </div>
+    </article>
   )
 }
 
@@ -127,6 +140,7 @@ function InfoIcon({ className }: { className?: string }) {
       stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -146,6 +160,7 @@ function BoltIcon({ className }: { className?: string }) {
       stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -165,6 +180,7 @@ function UsersIcon({ className }: { className?: string }) {
       stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -184,6 +200,7 @@ function ShieldIcon({ className }: { className?: string }) {
       stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"

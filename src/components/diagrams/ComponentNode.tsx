@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ReactNode } from 'react'
+import { ReactNode, KeyboardEvent } from 'react'
 
 export interface Position {
   x: number
@@ -11,8 +11,10 @@ export interface ComponentNodeProps {
   icon?: ReactNode
   position: Position
   onClick?: () => void
+  onKeyDown?: (e: KeyboardEvent) => void
   variant?: 'default' | 'primary' | 'secondary' | 'accent'
   size?: 'sm' | 'md' | 'lg'
+  ariaLabel?: string
 }
 
 const variantStyles = {
@@ -51,15 +53,15 @@ const sizeStyles = {
   },
   md: {
     padding: 'px-4 py-3',
-    minWidth: 'min-w-[120px]',
+    minWidth: 'min-w-[100px] md:min-w-[120px]',
     iconSize: 'w-5 h-5',
-    textSize: 'text-sm',
+    textSize: 'text-xs md:text-sm',
   },
   lg: {
-    padding: 'px-6 py-4',
-    minWidth: 'min-w-[160px]',
-    iconSize: 'w-6 h-6',
-    textSize: 'text-base',
+    padding: 'px-4 py-3 md:px-6 md:py-4',
+    minWidth: 'min-w-[100px] md:min-w-[160px]',
+    iconSize: 'w-5 h-5 md:w-6 md:h-6',
+    textSize: 'text-xs md:text-base',
   },
 }
 
@@ -68,22 +70,28 @@ export function ComponentNode({
   icon,
   position,
   onClick,
+  onKeyDown,
   variant = 'default',
   size = 'md',
+  ariaLabel,
 }: ComponentNodeProps) {
   const styles = variantStyles[variant]
   const sizes = sizeStyles[size]
+  const isInteractive = !!onClick
 
   return (
-    <motion.div
+    <motion.button
+      type="button"
       className={`
-        absolute cursor-pointer select-none
+        absolute select-none
         ${sizes.padding} ${sizes.minWidth}
         ${styles.bg} ${styles.border} ${styles.text}
         border-2 rounded-xl
-        flex flex-col items-center justify-center gap-2
+        flex flex-col items-center justify-center gap-1 md:gap-2
         backdrop-blur-sm
         transition-colors duration-200
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900
+        ${isInteractive ? 'cursor-pointer' : 'cursor-default'}
       `}
       style={{
         left: position.x,
@@ -91,13 +99,18 @@ export function ComponentNode({
         transform: 'translate(-50%, -50%)',
       }}
       onClick={onClick}
+      onKeyDown={onKeyDown}
+      aria-label={ariaLabel || label}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      whileHover={{
+      whileHover={isInteractive ? {
         scale: 1.08,
         boxShadow: `0 0 20px ${styles.glow}, 0 0 40px ${styles.glow}`,
+      } : undefined}
+      whileTap={isInteractive ? { scale: 0.95 } : undefined}
+      whileFocus={{
+        boxShadow: `0 0 0 2px rgba(59, 130, 246, 1)`,
       }}
-      whileTap={{ scale: 0.95 }}
       transition={{
         type: 'spring',
         stiffness: 400,
@@ -105,13 +118,13 @@ export function ComponentNode({
       }}
     >
       {icon && (
-        <div className={`${sizes.iconSize} flex items-center justify-center`}>
+        <div className={`${sizes.iconSize} flex items-center justify-center`} aria-hidden="true">
           {icon}
         </div>
       )}
       <span className={`${sizes.textSize} font-semibold text-center whitespace-nowrap`}>
         {label}
       </span>
-    </motion.div>
+    </motion.button>
   )
 }
