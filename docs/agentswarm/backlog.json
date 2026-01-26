@@ -1,0 +1,218 @@
+{
+  "wave": 1,
+  "goal": "Build interactive webapp visualizing Agent Relay system with architecture diagrams, message flow animations, multi-agent demo, code examples, and dashboard integration",
+  "tasks": [
+    {
+      "id": "T-001",
+      "title": "Set up routing, layout, and navigation",
+      "priority": 1,
+      "area": "frontend",
+      "depends_on": [],
+      "worktree_hint": "src/App.tsx, src/components/layout/",
+      "description": "Configure React Router with routes for all 5 pages. Create a Layout component wrapper and Navigation component with links to each page. Use Tailwind for styling a dark-themed nav bar that matches the existing slate-900 background.",
+      "acceptance_criteria": [
+        "Routes defined for: /, /architecture, /message-flow, /multi-agent, /code-examples, /dashboard",
+        "Navigation component renders links to all routes",
+        "Layout component wraps page content with consistent padding/margins",
+        "Active route is visually highlighted in nav",
+        "TypeScript compiles without errors"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "npm run dev -- open browser, click each nav link, verify URL changes and no console errors"
+      ],
+      "notes": "Use NavLink from react-router-dom for active state styling. Keep nav fixed at top."
+    },
+    {
+      "id": "T-002",
+      "title": "Create reusable diagram components",
+      "priority": 2,
+      "area": "frontend",
+      "depends_on": ["T-001"],
+      "worktree_hint": "src/components/diagrams/",
+      "description": "Build three reusable components for visualizations: ComponentNode (a box representing Daemon/SDK/MCP/CLI with icon, label, hover effects), ConnectionLine (SVG path between nodes with optional animation), MessageBubble (small animated element that travels along a path). Use Framer Motion for all animations.",
+      "acceptance_criteria": [
+        "ComponentNode accepts props: label, icon (optional), position, onClick",
+        "ComponentNode has hover scale and glow effect via Framer Motion",
+        "ConnectionLine renders SVG path between two coordinate points",
+        "ConnectionLine supports animated dashed stroke",
+        "MessageBubble animates along a given SVG path",
+        "All components are typed with TypeScript interfaces",
+        "Components exported from index file for clean imports"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "Create a test page that renders each component to verify they display correctly",
+        "Verify animations run at 60fps (no jank in browser DevTools Performance tab)"
+      ],
+      "notes": "Use motion.div and motion.svg from framer-motion. For MessageBubble path animation, use offsetDistance CSS or Framer Motion's motionValue with useTransform."
+    },
+    {
+      "id": "T-003",
+      "title": "Build Architecture Overview page",
+      "priority": 3,
+      "area": "frontend",
+      "depends_on": ["T-002"],
+      "worktree_hint": "src/pages/ArchitecturePage.tsx",
+      "description": "Create the Architecture Overview page showing the Agent Relay system components. Display 4 main nodes: Daemon (center), SDK (left), MCP Server (right), CLI (bottom). Draw connection lines between them showing relationships. Add click handlers to show info tooltip/modal about each component. Include a legend explaining the diagram.",
+      "acceptance_criteria": [
+        "Page renders at /architecture route",
+        "4 ComponentNode instances positioned in logical layout",
+        "Connection lines show: SDK<->Daemon, MCP<->Daemon, CLI<->Daemon",
+        "Clicking a node shows brief description of that component",
+        "Legend/key explains what each node type represents",
+        "Responsive layout works on tablet+ sizes",
+        "Page has descriptive heading and intro text"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "npm run dev -- navigate to /architecture, verify all nodes render",
+        "Click each node, verify info displays",
+        "Resize browser window, verify layout doesn't break"
+      ],
+      "notes": "Consider using CSS Grid or absolute positioning for node placement. Component descriptions: Daemon=central message broker, SDK=TypeScript library for agents, MCP=Model Context Protocol server, CLI=command-line interface."
+    },
+    {
+      "id": "T-004",
+      "title": "Build Message Flow Visualization page",
+      "priority": 4,
+      "area": "frontend",
+      "depends_on": ["T-002"],
+      "worktree_hint": "src/pages/MessageFlowPage.tsx",
+      "description": "Create an animated step-by-step visualization showing how a message flows through the Agent Relay system. Show: Agent A -> SDK -> Daemon -> SDK -> Agent B. Include play/pause/reset controls and step indicator. Each step should animate the message bubble traveling along the path with explanatory text.",
+      "acceptance_criteria": [
+        "Page renders at /message-flow route",
+        "Diagram shows 5 nodes: Agent A, SDK (sender), Daemon, SDK (receiver), Agent B",
+        "Play button starts animation sequence",
+        "Pause button stops animation mid-flow",
+        "Reset button returns to initial state",
+        "Step indicator shows current step (1-5) with description",
+        "Message bubble animates smoothly between nodes",
+        "Each step has explanatory text (e.g., 'Agent A sends message via SDK')"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "npm run dev -- navigate to /message-flow",
+        "Click Play, verify message animates through all 5 steps",
+        "Click Pause mid-animation, verify it stops",
+        "Click Reset, verify returns to step 1",
+        "Verify step descriptions update correctly"
+      ],
+      "notes": "Use Framer Motion useAnimationControls for orchestrating multi-step sequence. Store current step in React state. Consider using a state machine pattern for clean step transitions."
+    },
+    {
+      "id": "T-005",
+      "title": "Build Multi-Agent Demo page",
+      "priority": 5,
+      "area": "frontend",
+      "depends_on": ["T-002"],
+      "worktree_hint": "src/pages/MultiAgentDemoPage.tsx",
+      "description": "Create an interactive simulation showing multiple agents communicating in real-time. Display 3-4 agent nodes arranged in a network. Add controls to select sender/receiver agents and send a message. Show messages as animated bubbles traveling between agents with a message log panel showing history.",
+      "acceptance_criteria": [
+        "Page renders at /multi-agent route",
+        "3-4 agent nodes displayed with unique names/colors",
+        "Dropdown or click to select sender agent",
+        "Dropdown or click to select receiver agent",
+        "Send button triggers message animation from sender to receiver (through central daemon)",
+        "Message log panel shows history of sent messages with timestamps",
+        "AnimatePresence used for smooth message enter/exit animations",
+        "Multiple messages can be in-flight simultaneously"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "npm run dev -- navigate to /multi-agent",
+        "Select Agent A as sender, Agent B as receiver, click Send",
+        "Verify message animates A -> Daemon -> B",
+        "Verify message appears in log",
+        "Send multiple messages rapidly, verify they animate correctly"
+      ],
+      "notes": "Use React state array for message queue. Each message needs unique ID for AnimatePresence key. Consider showing daemon node in center with agents around it."
+    },
+    {
+      "id": "T-006",
+      "title": "Build Code Examples page with syntax highlighting",
+      "priority": 6,
+      "area": "frontend",
+      "depends_on": ["T-001"],
+      "worktree_hint": "src/pages/CodeExamplesPage.tsx, src/components/code/, src/data/codeExamples.ts",
+      "description": "Create a page showcasing SDK usage with syntax-highlighted code examples. Install prism-react-renderer. Create CodeBlock component with copy-to-clipboard. Add 4-5 examples: basic setup, sending messages, receiving messages, broadcast, channel subscription. Use tabs to switch between examples.",
+      "acceptance_criteria": [
+        "prism-react-renderer installed and configured",
+        "CodeBlock component renders syntax-highlighted TypeScript code",
+        "Copy button copies code to clipboard with feedback toast",
+        "Tab interface to switch between 4-5 examples",
+        "Examples cover: initialization, send message, receive message, broadcast, channels",
+        "Code examples are accurate representations of SDK usage",
+        "Dark theme consistent with app design"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "npm run dev -- navigate to /code-examples",
+        "Verify syntax highlighting renders correctly",
+        "Click copy button, paste elsewhere, verify code copied",
+        "Click each tab, verify different example displays"
+      ],
+      "notes": "Use prism-react-renderer with vsDark or similar dark theme. Store code examples in separate data file for maintainability. Use navigator.clipboard.writeText for copy."
+    },
+    {
+      "id": "T-007",
+      "title": "Build Dashboard Integration page",
+      "priority": 7,
+      "area": "frontend",
+      "depends_on": ["T-001"],
+      "worktree_hint": "src/pages/DashboardPage.tsx",
+      "description": "Create a page that embeds or links to the live relay dashboard at localhost:3888. Use an iframe with error handling. Provide fallback UI if dashboard is unavailable. Include 'Open in New Tab' button as alternative. Add brief instructions about what the dashboard shows.",
+      "acceptance_criteria": [
+        "Page renders at /dashboard route",
+        "Iframe attempts to load localhost:3888",
+        "Error boundary catches iframe load failures",
+        "Fallback UI displays if dashboard unavailable with helpful message",
+        "Open in New Tab button opens localhost:3888 in new window",
+        "Instructions explain what the dashboard shows (connected agents, message history, etc.)",
+        "Iframe has appropriate height (min 600px or vh-based)"
+      ],
+      "verification_steps": [
+        "npm run type-check",
+        "npm run lint",
+        "npm run dev -- navigate to /dashboard",
+        "If relay daemon running: verify iframe loads dashboard",
+        "If relay daemon NOT running: verify fallback message displays",
+        "Click Open in New Tab, verify new tab opens to localhost:3888"
+      ],
+      "notes": "Iframe may have CORS issues depending on dashboard config. The fallback is important since users may not always have daemon running. Consider onError handler for iframe."
+    },
+    {
+      "id": "T-008",
+      "title": "Polish responsive design and accessibility",
+      "priority": 8,
+      "area": "frontend",
+      "depends_on": ["T-003", "T-004", "T-005", "T-006", "T-007"],
+      "worktree_hint": "src/",
+      "description": "Review all pages for responsive design and accessibility. Ensure layouts work on tablet (768px+) and desktop. Add aria-labels, keyboard navigation, focus states. Test with screen reader. Add loading states where appropriate. Final visual polish pass.",
+      "acceptance_criteria": [
+        "All pages render correctly at 768px, 1024px, 1440px widths",
+        "Navigation is keyboard accessible (Tab, Enter)",
+        "Interactive elements have focus-visible states",
+        "Images/icons have alt text or aria-labels",
+        "Color contrast meets WCAG AA (4.5:1 for text)",
+        "No horizontal scrolling on any viewport",
+        "Animations respect prefers-reduced-motion",
+        "Production build size is reasonable (<500KB gzipped)"
+      ],
+      "verification_steps": [
+        "npm run build -- verify no errors, check dist size",
+        "Open in browser, test all pages at 768px, 1024px, 1440px",
+        "Tab through all pages with keyboard only",
+        "Run Lighthouse accessibility audit, fix any issues",
+        "Test with prefers-reduced-motion: reduce in browser DevTools"
+      ],
+      "notes": "Use Tailwind responsive prefixes (md:, lg:). For reduced motion, wrap Framer Motion animations in a check for useReducedMotion hook."
+    }
+  ]
+}
