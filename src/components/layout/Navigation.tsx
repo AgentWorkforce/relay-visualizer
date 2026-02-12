@@ -8,6 +8,7 @@ const navItems = [
   { path: '/multi-agent', label: 'Multi-Agent Demo' },
   { path: '/code-examples', label: 'Code Examples' },
   { path: '/dashboard', label: 'Dashboard' },
+  { path: '/transcript', label: 'Transcript' },
 ]
 
 export function Navigation() {

@@ -7,6 +7,7 @@ import {
   MultiAgentDemoPage,
   CodeExamplesPage,
   DashboardPage,
+  TranscriptPage,
   DiagramTestPage,
 } from './pages'
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="multi-agent" element={<MultiAgentDemoPage />} />
           <Route path="code-examples" element={<CodeExamplesPage />} />
           <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="transcript" element={<TranscriptPage />} />
           <Route path="diagram-test" element={<DiagramTestPage />} />
         </Route>
       </Routes>

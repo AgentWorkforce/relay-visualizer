@@ -48,6 +48,13 @@ export function HomePage() {
               href="/dashboard"
             />
           </li>
+          <li>
+            <FeatureCard
+              title="Transcript"
+              description="Fetch and visualize Relaycast channel history"
+              href="/transcript"
+            />
+          </li>
         </ul>
       </nav>
     </div>

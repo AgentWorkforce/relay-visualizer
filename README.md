@@ -2,6 +2,8 @@
 
 A modern, interactive web application that visually explains and demonstrates how the Agent Relay system works. Built with React and TypeScript, it helps users understand the architecture, message flow, and usage patterns of a multi-agent communication system.
 
+![Architecture Overview](docs/images/architecture-overview.png)
+
 ## Features
 
 - **Interactive Architecture Diagram** - Explore the core components of Agent Relay with clickable nodes and animated connections
